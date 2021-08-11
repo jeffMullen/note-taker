@@ -1,7 +1,9 @@
 const express = require('express');
-const db = require('./db/db.json');
+const fs = require('fs');
+const uuid = require('uuid');
 const path = require('path');
 
+const db = require('./db/db.json');
 const PORT = 3001;
 
 const app = express();
@@ -21,10 +23,17 @@ app.get('*', (req, res) => {
 });
 
 app.get('/api/notes', (req, res) => {
-    res.json(`${req.method} has been received from ${req.path}`);
-});
+    return console.log(res);
+    // res.json(__dirname, '/db/db.json')
+    // res.sendFile(path.join(__dirname, db))
+    // return res.json(db);
+}
+);
 
 app.post('/api/notes', (req, res) => {
+
+    // fs.appendFile(db, req.body, err => err ? console.log(err) : console.log('Note added!')); 
+
     res.json(`${req.method} has been received from ${req.path}`);
 });
 
