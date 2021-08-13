@@ -13,28 +13,26 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static('public'));
 
-app.get('/notes', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/notes.html'));
-
+app.get('/notes', (request, response) => {
+    response.sendFile(path.join(__dirname, '/public/notes.html'));
 });
 
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/index.html'));
+app.get('/api/notes', (request, response) => {
+    console.info(`${request.method} request has been received from ${request.path}`);
+
+    response.json(db);
 });
 
-app.get('/api/notes', (req, res) => {
-    return console.log(res);
-    // res.json(__dirname, '/db/db.json')
-    // res.sendFile(path.join(__dirname, db))
-    // return res.json(db);
-}
-);
+app.get('*', (request, response) => {
+    response.sendFile(path.join(__dirname, '/public/index.html'));
+});
 
-app.post('/api/notes', (req, res) => {
 
-    // fs.appendFile(db, req.body, err => err ? console.log(err) : console.log('Note added!')); 
+app.post('/api/notes', (request, response) => {
 
-    res.json(`${req.method} has been received from ${req.path}`);
+    // fs.appendFile(db, request.body, err => err ? console.log(err) : console.log('Note added!')); 
+
+    response.json(`${request.method} has been received from ${request.path}`);
 });
 
 app.listen(PORT, () => {
