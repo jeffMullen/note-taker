@@ -23,16 +23,40 @@ app.get('/api/notes', (request, response) => {
     response.json(db);
 });
 
-app.get('*', (request, response) => {
-    response.sendFile(path.join(__dirname, '/public/index.html'));
-});
-
-
 app.post('/api/notes', (request, response) => {
+
+    const { title, text } = request.body;
+
+    if (title && text) {
+        const newNote = {
+            title,
+            text
+        }
+
+        fs.readFile('./db/db.json', 'utf8', (err, data) => {
+            if (err) {
+                console.error(err);
+            } else {
+                const parsedNotes = JSON.parse(data);
+
+                parsedNotes.push(newNote);
+
+                fs.writeFile('./db/db.json', JSON.stringify(parsedNotes), err => {
+                    err
+                        ? console.error(err)
+                        : console.log('New note has been written!');
+                })
+            }
+        })
+    }
 
     // fs.appendFile(db, request.body, err => err ? console.log(err) : console.log('Note added!')); 
 
     response.json(`${request.method} has been received from ${request.path}`);
+});
+
+app.get('*', (request, response) => {
+    response.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
 app.listen(PORT, () => {
