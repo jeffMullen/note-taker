@@ -22,7 +22,16 @@ app.get('/notes', (request, response) => {
 app.get('/api/notes', (request, response) => {
     console.info(`${request.method} request has been received from ${request.path}`);
 
-    response.json(db);
+    // || Read db file and parse to edit
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+        } else {
+            const parsedNotes = JSON.parse(data);
+
+            response.json(parsedNotes);
+        }
+    });
 });
 
 // || Save a note
@@ -62,6 +71,30 @@ app.post('/api/notes', (request, response) => {
     response.json(db);
 
 });
+
+// || Delete a note
+app.delete('/api/notes/:id', (request, response) => {
+    // console.log('delete path');
+    // console.log(request.params.id);
+
+    fs.readFile('./db/db.json', 'utf8', (err, data) => {
+        if (err) {
+            console.error(err);
+        } else {
+            const dataArray = JSON.parse(data);
+            // console.log(dataArray);
+
+            dataArray.forEach((el, index) => {
+                if (el.id === request.params.id) {
+                    console.log(el);
+                    // dataArray.splice(el, 1);
+                }
+            });
+        }
+    })
+
+
+})
 
 // || Render index.html file (home page)
 app.get('*', (request, response) => {
