@@ -74,25 +74,27 @@ app.post('/api/notes', (request, response) => {
 
 // || Delete a note
 app.delete('/api/notes/:id', (request, response) => {
-    // console.log('delete path');
-    // console.log(request.params.id);
 
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
             console.error(err);
         } else {
             const dataArray = JSON.parse(data);
-            // console.log(dataArray);
 
             dataArray.forEach((el, index) => {
                 if (el.id === request.params.id) {
-                    console.log(el);
-                    // dataArray.splice(el, 1);
+                    dataArray.splice(index, 1);
                 }
             });
+
+            fs.writeFile('./db/db.json', JSON.stringify(dataArray), err => {
+                err
+                    ? console.error(err)
+                    : console.log('New file has been written!');
+            })
         }
     })
-
+    response.json(db);
 
 })
 
