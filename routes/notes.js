@@ -60,6 +60,7 @@ notesRouter.post('/', (request, response) => {
 
 // || Delete a note
 notesRouter.delete('/:id', (request, response) => {
+    console.info(`${request.method} has been received from ${request.path}`);
 
     fs.readFile('./db/db.json', 'utf8', (err, data) => {
         if (err) {
